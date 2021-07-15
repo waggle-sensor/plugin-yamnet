@@ -107,7 +107,7 @@ def main():
         format='%(asctime)s %(message)s',
         datefmt='%Y/%m/%d %H:%M:%S')
 
-    logging.info("starting plugin. sample rate of audio is {} with duration of {} seconds".format(args.DURATION_S, SAMPLERATE_HZ))
+    logging.info("starting plugin. sample rate of audio is {} with duration of {} seconds".format(SAMPLERATE_HZ,args.DURATION_S))
 
     #####################
 
