@@ -1,0 +1,12 @@
+name: "yamnet_plugin"
+description: "SAGE plugin for YAMNet audio classification model. Trained to classify over 500 audio sounds."
+version: "0.1.0"
+source:
+  architectures:
+    - "linux/amd64"
+    - "linux/arm64"
+    - "linux/arm/v7"
+  url: "https://github.com/EnriqueNueve/yamnet_plugin"
+
+  testing:
+    command: [test.py]
