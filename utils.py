@@ -26,11 +26,30 @@ SAMPLERATE_HZ = 16000 # requirement of YAMNet
 ######################
 
 def get_parser():
+    """ Declares parse arguments
+    Returns:
+        args : argparse.ArgumentParser().parse_args
+    """
+
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--DURATION_S", default=10, type=int, help="Duration of audio clip in seconds"
+        "--DURATION_S", default=2, type=int, help="Duration of audio clip in seconds"
     )
     parser.add_argument(
         "--TOP_K", default=3, type=int, help="Number of top predictions to store"
     )
-    return parser.parse_args()
+    parser.add_argument(
+        "--MIC_PATH", default='None', type=str, help="Path for microphone used in plugin"
+    )
+    parser.add_argument(
+        "--MODE", default='a', type=str, help="Either a or b to pick mode"
+    )
+    parser.add_argument(
+        "--WATCH_SOUNDS", default='None', type=str, help="List of sounds to watch for"
+    )
+    args = parser.parse_args()
+
+    assert args.MODE == 'a' or args.MODE == 'b', "Invalid mode passed, must be either a or b"
+
+    return args

@@ -22,9 +22,47 @@ from utils import *
 ######################
 
 class YAMNetInterface():
-    def __init__(self,top_k,durtion_s):
-        self.TOP_K = top_k
-        self.DURATION_S = durtion_s
+   """
+    A class to interface with the YAMNet tflite model
+
+    ...
+
+    Attributes
+    ----------
+    TOP_K : int
+        Number of top k predictions to track
+    DURATION_S : int
+        Length in seconds of audio clips
+    MODE : str
+        Two operating modes, a or b 
+    WATCH_SOUNDS : [str]
+        List of sounds to watch for if in mode b
+    MODEL_PATH : str
+        Path for YAMNet tflite model
+    SAMPLERATE_HZ: int
+        Sample rate of audio, must be 16000 to work with YAMNet
+
+    Methods
+    -------
+    predict(y)
+        Takes np.array of sound wave and predicts a vector of softmax scores over classes
+    scale_data_yamnet(y)
+        Scales data between [-1,1], requirement of YAMNet
+    predictMode(y)
+        Wrapper function for prediction
+    getTopK(yh)
+        Takes predictions and return top-k classes
+    load_class_names()
+        Loads list of classes model was trained on and can predict
+    getAudioModel()
+        Utility to declare tflite model of YAMNet
+    """
+
+    def __init__(self,args):
+        self.TOP_K = args.TOP_K
+        self.DURATION_S = args.DURATION_S
+        self.MODE = args.MODE
+        self.WATCH_SOUNDS = args.WATCH_SOUNDS
         self.MODEL_PATH = "model_data/lite-model_yamnet_tflite_1.tflite"
         self.SAMPLERATE_HZ = 16000 # requirement of YAMNet
 
@@ -35,6 +73,14 @@ class YAMNetInterface():
         self.class_names = self.load_class_names()
 
     def predict(self,y):
+        """ Perform prediction with YAMNet tflite model
+        Args:
+            y (np.array): sound wave in form of np.array with shape (length,)
+
+        Returns:
+            yh_k (list): top k classes from predictions
+            yh_conf (list): corresponding softmax values for top predictions
+        """
         # Scale between -1 and 1
         y = self.scale_data_yamnet(y)
 
@@ -45,9 +91,25 @@ class YAMNetInterface():
 
     @staticmethod
     def scale_data_yamnet(y):
+        """ Perform prediction with YAMNet tflite model
+        Args:
+            y (np.array): sound wave in form of np.array with shape (length,)
+
+        Returns:
+            y (np.array): sound wave scaled between [-1,1]
+        """
         return 2.0 * (y - np.min(y)) / np.ptp(y) - 1
 
     def predictModel(self, y):
+        """ Perform prediction with YAMNet tflite model
+        Args:
+            y (np.array): sound wave in form of np.array with shape (length,)
+
+        Returns:
+            scores (np.array): softmax values for all classes of YAMNet for given data
+            embeddings (np.array): feature embedding of input data
+            spectrogram (np.array): a spectrogram of the input
+        """
         self.interpreter.resize_tensor_input(self.waveform_input_index, [len(y)], strict=True)
         self.interpreter.allocate_tensors()
         self.interpreter.set_tensor(self.waveform_input_index, y)
@@ -60,6 +122,13 @@ class YAMNetInterface():
         return scores, embeddings, spectrogram
 
     def getTopK(self, yh):
+        """ Perform prediction with YAMNet tflite model
+        Args:
+            yh (np.array): scores of prediction
+
+        Returns:
+            (list): top k class predictions from the input
+        """
         yh = yh.mean(axis=0)
         yh_max_id = yh.argsort()[-self.TOP_K:][::-1]
         return [self.class_names[k] for k in yh_max_id], [yh[k] for k in yh_max_id]
@@ -76,6 +145,7 @@ class YAMNetInterface():
         return class_names
 
     def getAudioModel(self):
+        """ Returns tflite model of YAMNet and dependencies """
         interpreter = tf.lite.Interpreter(model_path=self.MODEL_PATH)
         input_details = interpreter.get_input_details()
         waveform_input_index = input_details[0]["index"]
