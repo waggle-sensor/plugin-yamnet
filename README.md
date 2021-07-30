@@ -19,17 +19,17 @@ The needed meta-data (class names, model weights, and sample data) can be downlo
 ### A: Prediction stream for top-k classes
 This mode constantly logs predictions for top-k classes.
 
-'''python
+"""python
 # python3 main.py --DURATION_S 5 --TOP_K 3 --MIC_PATH dummy_path --MODE a
 args = get_parser()
 model_interface = YAMNetInterface(args)
-'''
+"""
 
 ### B: Scan for sounds in top-k classes
 This mode only logs if within top-k predicted classes are declared sound is matched.
 
-'''python
+"""python
 # python3 main.py --DURATION_S 10 --TOP_K 5 --MIC_PATH dummy_path --mode b
 args = get_parser()
 model_interface = YAMNetInterface(args)
-'''
+"""
