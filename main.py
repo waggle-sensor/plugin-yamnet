@@ -22,7 +22,6 @@ def main():
 
 """
 
-
 ######################
 # Import waggle modules
 ######################
@@ -38,12 +37,15 @@ import time
 ######################
 
 import librosa
-from PIL import Image
+import sounddevice as sd
 
 import numpy as np
 import tensorflow as tf
 import io
 import csv
+
+from model_interface import * 
+from utils import *
 
 ######################
 # Globals
@@ -52,83 +54,23 @@ import csv
 SAMPLERATE_HZ = 16000 # requirement of YAMNet
 
 ######################
-# Utils
-#####################
-
-# Find the name of the class with the top score when mean-aggregated across frames.
-def class_names_from_csv(class_map_csv_text):
-      """Returns list of class names corresponding to score vector."""
-      class_map_csv = io.StringIO(class_map_csv_text)
-      class_names = [display_name for (class_index, mid, display_name) in csv.reader(class_map_csv)]
-      class_names = class_names[1:]  # Skip CSV header
-      return class_names
-
-def getAudioModel(model_path='lite-model_yamnet_tflite_1.tflite'):
-    interpreter = tf.lite.Interpreter(model_path=model_path)
-    input_details = interpreter.get_input_details()
-    waveform_input_index = input_details[0]['index']
-    output_details = interpreter.get_output_details()
-    scores_output_index = output_details[0]['index']
-    embeddings_output_index = output_details[1]['index']
-    spectrogram_output_index = output_details[2]['index']
-
-    return interpreter, waveform_input_index, scores_output_index, embeddings_output_index, spectrogram_output_index
-
-def getTopK(yh,class_names,k=1):
-    yh = yh.mean(axis=0)
-    yh_max_id  = yh.argsort()[-k:][::-1]
-    return [class_names[k] for k in yh_max_id], [yh[k] for k in yh_max_id]
-
-def predictModel(interpreter, waveform_input_index, scores_output_index, embeddings_output_index, spectrogram_output_index, y):
-    interpreter.resize_tensor_input(waveform_input_index, [len(y)], strict=True)
-    interpreter.allocate_tensors()
-    interpreter.set_tensor(waveform_input_index, y)
-    interpreter.invoke()
-    scores, embeddings, spectrogram = (
-        interpreter.get_tensor(scores_output_index),
-        interpreter.get_tensor(embeddings_output_index),
-        interpreter.get_tensor(spectrogram_output_index))
-    return scores, embeddings, spectrogram
-
-######################
 # Main
 #####################
 
 def main():
     # Get parse args
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--DURATION_S", default=10, type=int, help="Duration of audio clip in seconds")
-    parser.add_argument("--TOP_K", default=3, type=int, help="Number of top predictions to store")
-    args = parser.parse_args()
+    args = get_parser()
 
     # Declare logger
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s %(message)s',
         datefmt='%Y/%m/%d %H:%M:%S')
-
     logging.info("starting plugin. sample rate of audio is {} with duration of {} seconds".format(SAMPLERATE_HZ,args.DURATION_S))
 
-    #####################
+    # Declare model interface
+    model_interface = YAMNetInterface(args.TOP_K,args.DURATION_S)
 
-    # Load model
-    interpreter, waveform_input_index, scores_output_index, embeddings_output_index, spectrogram_output_index = getAudioModel()
-
-    # Load class names
-    class_names = class_names_from_csv(open('yamnet_class_map.csv').read())
-
-    # Get sample with open_data_source
-    y, _ = librosa.load("street_music_sample.wav",SAMPLERATE_HZ)
-
-    # Scale between -1 and 1
-    y= 2.*(y - np.min(y))/np.ptp(y)-1
-
-    # Make a prediction
-    scores, embeddings, spectrogram = predictModel(interpreter, waveform_input_index, scores_output_index, embeddings_output_index, spectrogram_output_index, y)
-    yh_k, yh_conf = getTopK(scores,class_names,args.TOP_K)
-
-    for i,k in enumerate(yh_k):
-        print("Rank: {} | Class: {} | Score: {:.4f}".format(i+1, k, yh_conf[i]))
 
     #####################
 
@@ -146,6 +88,8 @@ def main():
     #        plugin.publish("rank."+str(i+1)+".class", yh_k[i])
     #        plugin.publish("rank."+str(i+1)+".prob", yh_conf[i])
 
+
+######################
 
 if __name__ == '__main__':
     main()
