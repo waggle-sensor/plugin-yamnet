@@ -10,7 +10,7 @@ The needed meta-data (class names, model weights, and sample data) can be downlo
 ## Modes
 
 ### Passable arguments:
-* DURATION_S (default = 5): length of audio clips in seconds
+* DURATION_S (default = 2): length of audio clips in seconds
 * TOP_K (default = 3): number of argmax predictions to record
 * MIC_PATH (default = None): path to mic usesd for plugin
 * MODE (default = a): either mode a or b, refer below
