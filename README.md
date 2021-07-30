@@ -14,7 +14,7 @@ The needed meta-data (class names, model weights, and sample data) can be downlo
 * TOP_K (default = 3): number of argmax predictions to record
 * MIC_PATH (default = None): path to mic usesd for plugin
 * MODE (default = a): either mode a or b, refer below
-* WATCH_SOUNDS (default = None): list of classes to watch for, must be in mode b
+* WATCH_SOUNDS (default = None): list of classes to watch for, must be in mode b, seperate each term by a comma
 
 ### A: Prediction stream for top-k classes
 This mode constantly logs predictions for top-k classes.
@@ -29,7 +29,7 @@ model_interface = YAMNetInterface(args)
 This mode only logs if within top-k predicted classes are declared sound is matched.
 
 ```python
-#python3 main.py --DURATION_S 10 --TOP_K 5 --MIC_PATH dummy_path --mode b
+#python3 main.py --DURATION_S 10 --TOP_K 5 --MIC_PATH dummy_path --MODE b WATCH_SOUNDS music,Ice cream truck
 args = get_parser()
 model_interface = YAMNetInterface(args)
 ```
