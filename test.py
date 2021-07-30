@@ -87,9 +87,10 @@ class MyTestCase(unittest.TestCase):
 
         # Get parse args
         args = get_parser()
+        args.DURATION_S = 5
         args.MODE = 'b'
-        args.WATCH_SOUNDS = ['Music','Ice cream truck']
-        args.TOP_K = 5
+        args.WATCH_SOUNDS = ['Music','Ice cream truck, ice cream van']
+        args.TOP_K = 30
 
         # Declare model interface
         model_interface = YAMNetInterface(args)
@@ -105,7 +106,7 @@ class MyTestCase(unittest.TestCase):
                             dtype='float32',
                             blocksize=SAMPLERATE_HZ*2,
                             callback=predict_sound):
-            sd.sleep(10000)
+            sd.sleep(30000)
         print("--- %s seconds ---" % (time.time() - start_time))
 
 

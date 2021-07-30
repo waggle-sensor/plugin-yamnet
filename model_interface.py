@@ -22,7 +22,7 @@ from utils import *
 ######################
 
 class YAMNetInterface():
-   """
+    """
     A class to interface with the YAMNet tflite model
 
     ...
@@ -34,7 +34,7 @@ class YAMNetInterface():
     DURATION_S : int
         Length in seconds of audio clips
     MODE : str
-        Two operating modes, a or b 
+        Two operating modes, a or b
     WATCH_SOUNDS : [str]
         List of sounds to watch for if in mode b
     MODEL_PATH : str
