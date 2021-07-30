@@ -29,7 +29,7 @@ model_interface = YAMNetInterface(args)
 This mode only logs if within top-k predicted classes are declared sound is matched.
 
 ```python
-#python3 main.py --DURATION_S 10 --TOP_K 5 --MIC_PATH dummy_path --MODE b WATCH_SOUNDS music,Ice cream truck
+#python3 main.py --DURATION_S 10 --TOP_K 5 --MIC_PATH dummy_path --MODE b WATCH_SOUNDS Music
 args = get_parser()
 model_interface = YAMNetInterface(args)
 ```
