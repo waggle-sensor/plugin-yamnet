@@ -1,6 +1,8 @@
-name: "yamnet_plugin"
+name: "yamnet-plugin"
 description: "SAGE plugin for YAMNet audio classification model. Trained to classify over 500 audio sounds."
 version: "0.1.0"
+authors: "Enrique Nueve  <ennu6440@colorado.edu>"
+keywords: "Machine learning, Internet of Things, Audio"
 source:
   architectures:
     - "linux/amd64"
