@@ -6,11 +6,12 @@ model_interface.py
 # Import modules
 ######################
 
-import librosa
-import sounddevice as sd
+#import librosa
+#import sounddevice as sd
 import argparse
 import numpy as np
-import tensorflow as tf
+#import tensorflow as tf
+import tflite_runtime.interpreter as tflite
 import io
 import time
 import csv
@@ -63,7 +64,7 @@ class YAMNetInterface():
         self.DURATION_S = args.DURATION_S
         self.MODE = args.MODE
         self.WATCH_SOUNDS = args.WATCH_SOUNDS
-        self.MODEL_PATH = "model_data/lite-model_yamnet_tflite_1.tflite"
+        self.MODEL_PATH = "lite-model_yamnet_tflite_1.tflite"
         self.SAMPLERATE_HZ = 16000 # requirement of YAMNet
 
         # Load model
@@ -135,7 +136,7 @@ class YAMNetInterface():
 
     def load_class_names(self):
         """Returns list of class names corresponding to score vector."""
-        with open("model_data/yamnet_class_map.csv", "r") as file:
+        with open("yamnet_class_map.csv", "r") as file:
             class_map_csv_text = file.read()
         class_map_csv = io.StringIO(class_map_csv_text)
         class_names = [
@@ -146,7 +147,7 @@ class YAMNetInterface():
 
     def getAudioModel(self):
         """ Returns tflite model of YAMNet and dependencies """
-        interpreter = tf.lite.Interpreter(model_path=self.MODEL_PATH)
+        interpreter = tflite.Interpreter(model_path=self.MODEL_PATH)
         input_details = interpreter.get_input_details()
         waveform_input_index = input_details[0]["index"]
         output_details = interpreter.get_output_details()
