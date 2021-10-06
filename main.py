@@ -83,13 +83,13 @@ def main():
          # Publish to plugin
         if args.MODE == 'a':
             for i in range(args.TOP_K):
-                class_name = yh_k[i].replace(' ', '').replace(',', '').replace('(','').replace.(')','').lower()
+                class_name = yh_k[i].replace(' ', '').replace(',', '').replace('(','').replace(')','').lower()
                 plugin.publish(f'env.detection.sound.{class_name}.prob', yh_conf[i], timestamp=sample.timestamp)
                 logging.info(f'env.detection.sound.{class_name}.prob: {yh_conf[i]}')
         elif args.MODE == 'b':
             for k, conf in map(yh_k, yh_conf):
                 if k in args.WATCH_SOUNDS:
-                    class_name = k.replace(' ', '').replace(',', '').replace('(','').replace.(')','').lower()
+                    class_name = k.replace(' ', '').replace(',', '').replace('(','').replace(')','').lower()
                     plugin.publish(f'env.detection.sound.{class_name}.prob', conf, timestamp=sample.timestamp)
                     logging.info(f'env.detection.sound.{class_name}.prob: {conf}')
         
