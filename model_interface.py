@@ -64,7 +64,7 @@ class YAMNetInterface():
         self.DURATION_S = args.DURATION_S
         self.MODE = args.MODE
         self.WATCH_SOUNDS = args.WATCH_SOUNDS
-        self.MODEL_PATH = "model_data/lite-model_yamnet_tflite_1.tflite"
+        self.MODEL_PATH = "lite-model_yamnet_tflite_1.tflite"
         self.SAMPLERATE_HZ = 16000 # requirement of YAMNet
 
         # Load model
@@ -136,7 +136,7 @@ class YAMNetInterface():
 
     def load_class_names(self):
         """Returns list of class names corresponding to score vector."""
-        with open("model_data/yamnet_class_map.csv", "r") as file:
+        with open("yamnet_class_map.csv", "r") as file:
             class_map_csv_text = file.read()
         class_map_csv = io.StringIO(class_map_csv_text)
         class_names = [

@@ -2,6 +2,7 @@
 #sounddevice
 #numpy==1.19.5 # including this version of numpy makes waggle.data.audio crashes with illegal instructions (core dump)
 pillow
+git+https://github.com/sagecontinuum/sage-cli.git
 waggle[audio] @ https://github.com/waggle-sensor/pywaggle/releases/download/0.46.3/waggle-0.46.3-py3-none-any.whl
 --extra-index-url https://google-coral.github.io/py-repo/ 
 tflite_runtime

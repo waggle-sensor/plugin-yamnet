@@ -83,13 +83,15 @@ def main():
          # Publish to plugin
         if args.MODE == 'a':
             for i in range(args.TOP_K):
-                plugin.publish(f'env.detection.sound.{yh_k[i]}.prob', yh_conf[i], timestamp=sample.timestamp)
-                logging.info(f'env.detection.sound.{yh_k[i]}.prob: {yh_conf[i]}')
+                class_name = yh_k[i].replace(' ', '').replace(',', '').lower()
+                plugin.publish(f'env.detection.sound.{class_name}.prob', yh_conf[i], timestamp=sample.timestamp)
+                logging.info(f'env.detection.sound.{class_name}.prob: {yh_conf[i]}')
         elif args.MODE == 'b':
             for k, conf in map(yh_k, yh_conf):
                 if k in args.WATCH_SOUNDS:
-                    plugin.publish(f'env.detection.sound.{k}.prob', conf, timestamp=sample.timestamp)
-                    logging.info(f'env.detection.sound.{k}.prob: {conf}')
+                    class_name = k.replace(' ', '').replace(',', '').lower()
+                    plugin.publish(f'env.detection.sound.{class_name}.prob', conf, timestamp=sample.timestamp)
+                    logging.info(f'env.detection.sound.{class_name}.prob: {conf}')
         
         if do_sampling:
             # NOTE: PyWaggle 0.46.3 does not support mp3 as file extension
