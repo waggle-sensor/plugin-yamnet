@@ -6,11 +6,12 @@ model_interface.py
 # Import modules
 ######################
 
-import librosa
-import sounddevice as sd
+#import librosa
+#import sounddevice as sd
 import argparse
 import numpy as np
-import tensorflow as tf
+#import tensorflow as tf
+import tflite_runtime.interpreter as tflite
 import io
 import time
 import csv
@@ -146,7 +147,7 @@ class YAMNetInterface():
 
     def getAudioModel(self):
         """ Returns tflite model of YAMNet and dependencies """
-        interpreter = tf.lite.Interpreter(model_path=self.MODEL_PATH)
+        interpreter = tflite.Interpreter(model_path=self.MODEL_PATH)
         input_details = interpreter.get_input_details()
         waveform_input_index = input_details[0]["index"]
         output_details = interpreter.get_output_details()

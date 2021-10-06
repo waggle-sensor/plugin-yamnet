@@ -1,14 +1,31 @@
 name: "yamnet"
 description: "SAGE plugin for YAMNet audio classification model. Trained to classify over 500 audio sounds."
 version: "0.1.0"
+namespace: "sage"
 authors: "Enrique Nueve  <ennu6440@colorado.edu>"
+collaborators:
+funding:
+license: "MIT License"
 keywords: "Machine learning, Internet of Things, Audio"
+homepage: "https://github.com/waggle-sensor/yamnet-plugin"
 source:
   architectures:
     - "linux/amd64"
     - "linux/arm64"
-    - "linux/arm/v7"
-  url: "https://github.com/EnriqueNueve/yamnet_plugin"
-
-  testing:
-    command: [test.py]
+  url: "https://github.com/waggle-sensor/yamnet-plugin"
+  branch: "main"
+inputs:
+  - id: "DURATION_S"
+    type: "int"
+  - id: "TOP_K"
+    type: "int"
+  - id: "MIC_PATH"
+    type: "string"
+  - id: "MODE"
+    type: "string"
+  - id: "WATCH_SOUNDS"
+    type: "string"
+  - id: "INTERVAL"
+    type: "int"
+  - id: "SAMPLING_INTERVAL"
+    type: "int"
