@@ -84,17 +84,19 @@ def main():
         if args.MODE == 'a':
             for i in range(args.TOP_K):
                 class_name = yh_k[i].replace(' ', '').replace(',', '').replace('(','').replace(')','').lower()
-                plugin.publish(f'env.detection.sound.{class_name}.prob', yh_conf[i], timestamp=sample.timestamp)
-                logging.info(f'env.detection.sound.{class_name}.prob: {yh_conf[i]}')
+                class_confidence = float(yh_conf[i])
+                plugin.publish(f'env.detection.sound.{class_name}.prob', class_confidence, timestamp=sample.timestamp)
+                logging.info(f'env.detection.sound.{class_name}.prob: {class_confidence}')
         elif args.MODE == 'b':
             for k, conf in map(yh_k, yh_conf):
                 if k in args.WATCH_SOUNDS:
                     class_name = k.replace(' ', '').replace(',', '').replace('(','').replace(')','').lower()
-                    plugin.publish(f'env.detection.sound.{class_name}.prob', conf, timestamp=sample.timestamp)
-                    logging.info(f'env.detection.sound.{class_name}.prob: {conf}')
+                    class_confidence = float(conf)
+                    plugin.publish(f'env.detection.sound.{class_name}.prob', class_confidence, timestamp=sample.timestamp)
+                    logging.info(f'env.detection.sound.{class_name}.prob: {class_confidence}')
         
         if do_sampling:
-            # NOTE: PyWaggle 0.46.3 does not support mp3 as file extension
+            # NOTE: PyWaggle 0.46.3 does not support mp3 as file extension << mp3 is not a free licensed software!
             sample.save(f'sample.flac')
             plugin.upload_file(f'sample.flac')
             logging.info("uploaded sample")
