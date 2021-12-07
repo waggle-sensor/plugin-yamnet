@@ -47,10 +47,13 @@ def get_parser():
         "--WATCH_SOUNDS", nargs='+', type=str, help="List of sounds to watch for"
     )
     parser.add_argument(
-        "--INTERVAL", default=300, type=int, help="Time interval for inferencing in seconds"
+        "--INTERVAL", default=10, type=int, help="Time interval for inferencing in seconds"
     )
     parser.add_argument(
         "--SAMPLING_INTERVAL", default=-1, type=int, help="Sample audio every i-th inferencing"
+    )
+    parser.add_argument(
+        "--ITERATIONS", default=1, type=int, help="Number of inferencing iterations in this run"
     )
     
     args = parser.parse_args()
