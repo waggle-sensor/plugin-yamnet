@@ -30,4 +30,4 @@ inputs:
   - id: "SAMPLING_INTERVAL"
     type: "int"
   - id: "ITERATIONS"
-  - type: "int"
+    type: "int"
