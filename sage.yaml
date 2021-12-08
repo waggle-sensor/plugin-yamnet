@@ -1,5 +1,5 @@
 name: "yamnet"
-description: "SAGE plugin for YAMNet audio classification model. Trained to classify over 500 audio sounds."
+description: "Sound event detection (SED) plugin, using YAMNet audio classification model. Trained to classify over 500 audio sounds."
 version: "0.1.0"
 namespace: "sage"
 authors: "Enrique Nueve  <ennu6440@colorado.edu>, Dario Dematties <dario.dematties@northwestern.edu>"

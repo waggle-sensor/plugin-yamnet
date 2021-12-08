@@ -61,7 +61,10 @@ model_interface = YAMNetInterface(args)
 
 
 
+# Credits
 
+- Image credit:
+  * Wikimedia Commons License
 
 
 
