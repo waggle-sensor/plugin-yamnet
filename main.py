@@ -79,7 +79,7 @@ def main():
         # sample = microphone.record(duration=args.DURATION_S)
         # NOTE: PyWaggle's Microphone is (SAMPLINGRATE_HZ*DURATION, 1) matrix, but the model
         #       requires a vector. Squeezing the sample makes it work
-        my_file = wave.open('/my_dir/Digital_Presentation_48000.wav', 'rb')
+        my_file = wave.open('/app/Digital_Presentation_48000.wav', 'rb')
         # my_file = wave.open('/my_dir/file_example_WAV_1MG.wav', 'rb')
         # data = np.squeeze(sample.data)
         data = np.array(list(my_file.readframes(1000000)), dtype="float32")
