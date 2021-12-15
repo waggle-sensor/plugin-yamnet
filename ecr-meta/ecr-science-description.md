@@ -24,7 +24,7 @@ This mode runs "n" iterations and logs predictions for top-k classes in each ite
 ## This plugin has two modes
 
 ```python
-#python3 main.py --DURATION_S 5 --TOP_K 3 --MIC_PATH dummy_path --MODE a --ITERATIONS 10
+#python3 main.py --DURATION_S 5 --TOP_K 3 --MODE a --INPUT_FILE little_audio.wav
 args = get_parser()
 model_interface = YAMNetInterface(args)
 ```
@@ -33,7 +33,7 @@ model_interface = YAMNetInterface(args)
 This mode runs "n" iterations and only logs if within top-k predicted classes are declared sound is matched in each iteration.
 
 ```python
-#python3 main.py --DURATION_S 10 --TOP_K 5 --MIC_PATH dummy_path --MODE b WATCH_SOUNDS Music --ITERATIONS 10
+#python3 main.py --DURATION_S 10 --TOP_K 5 --MODE b --WATCH_SOUNDS Cacophony --INPUT_FILE little_audio.wav
 args = get_parser()
 model_interface = YAMNetInterface(args)
 ```
@@ -42,11 +42,12 @@ model_interface = YAMNetInterface(args)
 
 * **DURATION_S** (default = 2): length of audio clips in seconds
 * **TOP_K** (default = 3): number of argmax predictions to record
-* **MIC_PATH** (default = None): path to mic usesd for plugin
 * **MODE** (default = a): either mode a or b, refer below
 * **WATCH_SOUNDS** (default = None): list of classes to watch for, must be in mode b, seperate each term by a comma
-* **INTERVAL** (default = 300): number os seconds of silence after each iteration
+* **INTERVAL** (default = 10): number os seconds of silence after each iteration
 * **ITERATIONS** (default = 1): number of inference iterations on the run
+* **INPUT_FILE** (default = ''): path to the input file, if provided there will be no recording (default: none)
+* **PUBLISH** (default = False): publish the classifications made by yamned
 
 
 

@@ -1,7 +1,7 @@
 
 """
 main.py
-Example: python3 main.py --DURATION_S 10 --TOP_K 5 --MIC_PATH dummy_path
+Example: python3 main.py --DURATION_S 10 --TOP_K 5
 """
 
 ######################
@@ -59,10 +59,12 @@ def main():
 
     # Init plugin
     plugin.init()
-    # microphone = Microphone(samplerate=SAMPLERATE_HZ)
+    if not args.INPUT_FILE:
+        logging.info("this run will record from microphone")
+        microphone = Microphone(samplerate=SAMPLERATE_HZ)
 
     sampling_countdown = -1
-    if args.SAMPLING_INTERVAL >= 0:
+    if args.SAMPLING_INTERVAL >= 0 and not args.INPUT_FILE:
         logging.info("sampling enabled -- occurs every %sth inferencing", args.SAMPLING_INTERVAL)
         sampling_countdown = args.SAMPLING_INTERVAL
 
@@ -76,13 +78,15 @@ def main():
             sampling_countdown = args.SAMPLING_INTERVAL
 
         logging.info(f'Sampling...')
-        # sample = microphone.record(duration=args.DURATION_S)
         # NOTE: PyWaggle's Microphone is (SAMPLINGRATE_HZ*DURATION, 1) matrix, but the model
         #       requires a vector. Squeezing the sample makes it work
-        my_file = wave.open('/app/Digital_Presentation_48000.wav', 'rb')
-        # my_file = wave.open('/my_dir/file_example_WAV_1MG.wav', 'rb')
-        # data = np.squeeze(sample.data)
-        data = np.array(list(my_file.readframes(1000000)), dtype="float32")
+        if args.INPUT_FILE:
+            my_file = wave.open(args.INPUT_FILE, 'rb')
+            data = np.array(list(my_file.readframes(my_file.getnframes())), dtype="float32")
+        else:
+            sample = microphone.record(duration=args.DURATION_S)
+            data = np.squeeze(sample.data)
+
         logging.info(f'Inferencing...')
         yh_k, yh_conf = model_interface.predict(data)
 
@@ -91,20 +95,33 @@ def main():
             for i in range(args.TOP_K):
                 class_name = yh_k[i].replace(' ', '').replace(',', '').replace('(','').replace(')','').lower()
                 class_confidence = float(yh_conf[i])
-                # plugin.publish(f'env.detection.sound.{class_name}.prob', class_confidence, timestamp=sample.timestamp)
+                if args.PUBLISH:
+                    logging.info(f'Publishing...')
+                    if not args.INPUT_FILE:
+                        plugin.publish(f'env.detection.sound.{class_name}.prob', class_confidence, timestamp=sample.timestamp)
+                    else:
+                        plugin.publish(f'env.detection.sound.{class_name}.prob', class_confidence)
+
                 logging.info(f'env.detection.sound.{class_name}.prob: {class_confidence}')
         elif args.MODE == 'b':
             for k, conf in zip(yh_k, yh_conf):
                 if k in args.WATCH_SOUNDS:
                     class_name = k.replace(' ', '').replace(',', '').replace('(','').replace(')','').lower()
                     class_confidence = float(conf)
-                    # plugin.publish(f'env.detection.sound.{class_name}.prob', class_confidence, timestamp=sample.timestamp)
+                    if args.PUBLISH:
+                        logging.info(f'Publishing...')
+                        if not args.INPUT_FILE:
+                            plugin.publish(f'env.detection.sound.{class_name}.prob', class_confidence, timestamp=sample.timestamp)
+                        else:
+                            plugin.publish(f'env.detection.sound.{class_name}.prob', class_confidence)
+
+
                     logging.info(f'env.detection.sound.{class_name}.prob: {class_confidence}')
         
         if do_sampling:
             # NOTE: PyWaggle 0.46.3 does not support mp3 as file extension << mp3 is not a free licensed software!
-            # sample.save(f'sample.flac')
-            # plugin.upload_file(f'sample.flac')
+            sample.save(f'sample.flac')
+            plugin.upload_file(f'sample.flac')
             logging.info("uploaded sample")
 
         time.sleep(args.INTERVAL)

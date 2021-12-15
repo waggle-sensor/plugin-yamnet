@@ -38,9 +38,6 @@ def get_parser():
         "--TOP_K", default=1, type=int, help="Number of top predictions to store"
     )
     parser.add_argument(
-        "--MIC_PATH", default='None', type=str, help="Path for microphone used in plugin"
-    )
-    parser.add_argument(
         "--MODE", default='a', type=str, help="Either a or b to pick mode"
     )
     parser.add_argument(
@@ -54,6 +51,12 @@ def get_parser():
     )
     parser.add_argument(
         "--ITERATIONS", default=1, type=int, help="Number of inferencing iterations in this run"
+    )
+    parser.add_argument(
+        "--INPUT_FILE", default='', type=str, help="Path to the input file, if provided (default: none)"
+    )
+    parser.add_argument(
+        "--PUBLISH", action='store_true', help="Publish the classifications made by yamned (default: false)"
     )
     
     args = parser.parse_args()
